@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_launcher_icons/logger.dart';
 
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -33,7 +32,7 @@ class NotificationServices {
   }
 
   void initLocalNotifications(BuildContext context, RemoteMessage message) async {
-    var androidInitializationSettings = const AndroidInitializationSettings('@mipmap-mdpi/ic_launcher.png');
+    var androidInitializationSettings = const AndroidInitializationSettings("ic_launcher_50");
     var iosInitializationSettings = const DarwinInitializationSettings();
 
     var initializationSetting = InitializationSettings(
@@ -60,7 +59,7 @@ class NotificationServices {
   }
 
   Future<void> showNotification(RemoteMessage message) async {
-    String random_num = Random().nextInt(1000000).toString();
+    String random_num = Random().nextInt(10000).toString();
     print("Random number:" + random_num);
     AndroidNotificationChannel channel = AndroidNotificationChannel(
       random_num, // channel_id
@@ -89,8 +88,9 @@ class NotificationServices {
     );
 
     Future.delayed(Duration.zero, () {
+      final id = DateTime.now().microsecondsSinceEpoch ~/ 100000;
       _flutterLocalNotificationsPlugin.show(
-        1, // id
+        0, // id
         message.notification!.title.toString(), // title
         message.notification!.body.toString(), // body
         notificationDetails, // notificationDetails

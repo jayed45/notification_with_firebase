@@ -67,13 +67,16 @@ class NotificationServices {
       importance: Importance.max,
     );
 
+    await _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel); // Create channel
+
     AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails( // for android
-      channel.id.toString(), // channelId
-      channel.name.toString(), // channelName
-      channelDescription: 'Your channel description',
+      random_num, // channel_id
+      'Channel_name', // channel_name
+      // 'Your channel description',
       importance: Importance.high,
       priority: Priority.high,
-      ticker: 'ticker',
+      channelShowBadge: true, // Add this line to show badge
+      icon: 'ic_launcher_50', // Use your app's icon name here
     );
 
     const DarwinNotificationDetails darwinNotificationDetails = DarwinNotificationDetails( // for ios
@@ -87,17 +90,13 @@ class NotificationServices {
       iOS: darwinNotificationDetails,
     );
 
-    Future.delayed(Duration.zero, () {
-      final id = DateTime.now().microsecondsSinceEpoch ~/ 100000;
-      _flutterLocalNotificationsPlugin.show(
-        0, // id
-        message.notification!.title.toString(), // title
-        message.notification!.body.toString(), // body
-        notificationDetails, // notificationDetails
-      );
-    });
+    await _flutterLocalNotificationsPlugin.show(
+      0, // id
+      message.notification!.title.toString(), // title
+      message.notification!.body.toString(), // body
+      notificationDetails, // notificationDetails
+    );
   }
-
   Future<String?> getDeviceToken() async {
     String? token = await messaging.getToken();
     return token;
